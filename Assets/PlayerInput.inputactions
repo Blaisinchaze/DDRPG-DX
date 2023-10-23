@@ -9,7 +9,7 @@
                     "name": "Turn",
                     "type": "Value",
                     "id": "7865a1a4-1fdf-42ad-aa64-beed47cfb9e4",
-                    "expectedControlType": "Axis",
+                    "expectedControlType": "Integer",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -141,7 +141,7 @@
                 {
                     "name": "negative",
                     "id": "d1a9179c-97e6-4d12-9da2-c53f0b5f490e",
-                    "path": "<Gamepad>/dpad/up",
+                    "path": "<Gamepad>/dpad/down",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -152,7 +152,7 @@
                 {
                     "name": "positive",
                     "id": "448d7d45-5cf0-40a3-b49f-cd35d5a1d6fc",
-                    "path": "<Gamepad>/dpad/down",
+                    "path": "<Gamepad>/dpad/up",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -174,7 +174,7 @@
                 {
                     "name": "negative",
                     "id": "afcc3923-caac-4c43-b62f-6c10413240d7",
-                    "path": "<Keyboard>/w",
+                    "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
@@ -185,7 +185,7 @@
                 {
                     "name": "positive",
                     "id": "b8be74bf-9c75-4e8a-adcd-eb75a014c968",
-                    "path": "<Keyboard>/s",
+                    "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
