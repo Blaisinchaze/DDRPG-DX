@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -17,6 +19,10 @@ public class PlayerController : MonoBehaviour
 
     DungeonGenerator dungeon;
     AIController aiController;
+
+    public int health = 10;
+
+    public GameObject dieUI;
     // Start is called before the first frame update
     void Start()
     {
@@ -44,10 +50,21 @@ public class PlayerController : MonoBehaviour
         directionFacing = Vector2Int.up;
     }
 
+    public void Die()
+    {
+        dieUI.SetActive(true);
+        StartCoroutine(DeathScreenTimer());
+    }
+
+    IEnumerator DeathScreenTimer()
+    {
+        yield return new WaitForSeconds(8f);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
 
     void OnMove(InputValue _movementValue)
     {
-
+        Debug.Log("move pressed");
         int movementVector = (int)_movementValue.Get<float>();        
         if (movementVector == 0) return;
         Vector2Int _targetTile = currentTile + (directionFacing * movementVector);
@@ -57,7 +74,10 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Move");
             currentTile = _targetTile;
             targetLocation = new Vector3(_targetTile.x, 0, _targetTile.y);
-
+            if(currentTile == dungeon.floorList.ElementAt(dungeon.floorList.Count - 1).Value.Location)
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            }
 
             aiController.UpdateAI(currentTile);
         }
@@ -74,6 +94,28 @@ public class PlayerController : MonoBehaviour
         directionFacing = Vector2Int.RoundToInt(_tempVector);
         rot = Quaternion.Euler(0, movementVector > 0 ? 90 : -90,0 );
         targetDirection = targetDirection * rot;
+    }
+
+    void OnAttack(InputValue _attackValue)
+    {
+
+        int attackVector = (int)_attackValue.Get<float>();
+        if (attackVector == 0) return;
+
+
+        Debug.Log("Attack");
+        aiController.CheckAIAttack(currentTile + directionFacing, 5);
+        aiController.UpdateAI(currentTile);
+
+    }
+
+    void OnWait(InputValue _waitValue)
+    {
+        if(_waitValue.isPressed)
+        {
+            Debug.Log("Wait");
+            aiController.UpdateAI(currentTile);
+        }
     }
 
 

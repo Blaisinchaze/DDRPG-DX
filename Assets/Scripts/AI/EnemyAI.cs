@@ -16,6 +16,11 @@ public class EnemyAI : MonoBehaviour
     PlayerController playerController;
 
     public List<Vector2Int> path = new List<Vector2Int>();
+
+    public int health = 10;
+    public int damage = 1;
+
+    public List<GameObject> ps;
     private void Start()
     {
         dungeon = Object.FindObjectOfType<DungeonGenerator>();
@@ -42,11 +47,59 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
+    public bool TakeDamage(int _damage)
+    {
+        health -= _damage;
+        if(health <= 0)
+        {
+            Die();
+            return true;
+        }
+        else
+        {
+            StartCoroutine(DamageFlash());
+            return false;
+        }
+        
+    
+    }
+
+    public IEnumerator DamageFlash()
+    {
+        Color c = GetComponentInChildren<Renderer>().material.color;
+
+        foreach (var renderer in GetComponentsInChildren<Renderer>())
+        {
+            renderer.material.color = Color.red;
+            
+        }
+        yield return new WaitForSeconds(.2f);
+        foreach (var renderer in GetComponentsInChildren<Renderer>())
+        {
+            renderer.material.color = Color.white;
+
+        }
+    }
+
+    public void Die()
+    {
+        foreach (GameObject item in ps)
+        {
+            Instantiate(item, transform.position, Quaternion.identity);
+        }
+        dungeon.floorList[currentTile].traversable = true;
+        this.gameObject.SetActive(false);
+    }
+
     public void MoveAndAttack()
     {
         if (path.Count == 1)
         {
-            //attack
+            playerController.health -= damage;
+            if(playerController.health <= 0)
+            {
+                playerController.Die();
+            }
         }
         else if (path.Count > 1)
         {
@@ -97,24 +150,27 @@ public class EnemyAI : MonoBehaviour
             for (int i = 0; i < dungeon.floorList[currentNode.tile].neighbours.Count; i++)
             {
                 if(dungeon.floorList[currentNode.tile].neighbours[i].traversable == false) { continue; }
-                neighbourNode = closed.Find(x => x.tile == dungeon.floorList[currentNode.tile].neighbours[i].Location);
+
+                Vector2Int neighboutTiles = dungeon.floorList[currentNode.tile].neighbours[i].Location;
+
+                neighbourNode = closed.Find(x => x.tile == neighboutTiles);
                 if (neighbourNode != null)
                 {
 
                     continue;
                 }
-                neighbourNode = new Node(dungeon.floorList[currentNode.tile].neighbours[i].Location, currentNode.g +1, (int)Vector2Int.Distance(dungeon.floorList[currentNode.tile].neighbours[i].Location, _targetLocation));
+                neighbourNode = new Node(neighboutTiles, currentNode.g +1, (int)Vector2Int.Distance(neighboutTiles, _targetLocation));
                 //if we know that the neighbours will contain the endPoint we can just go for that or search for the node in open.
                 if (neighbourNode.tile == endPoint.tile)
                 {
                     neighbourNode = endPoint;
                     open.Add(neighbourNode);
                 }
-                else neighbourNode = open.Find(x => x.tile == dungeon.floorList[currentNode.tile].neighbours[i].Location);
+                else neighbourNode = open.Find(x => x.tile == neighboutTiles);
 
                 if (neighbourNode == null)
                 {
-                    neighbourNode = new Node(dungeon.floorList[currentNode.tile].neighbours[i].Location, currentNode.g + 1, (int)Vector2Int.Distance(dungeon.floorList[currentNode.tile].neighbours[i].Location, _targetLocation));
+                    neighbourNode = new Node(neighboutTiles, currentNode.g + 1, (int)Vector2Int.Distance(neighboutTiles, _targetLocation));
 
                     //Any pathfinding Node calculations can be done here
                     open.Add(neighbourNode);

@@ -132,7 +132,7 @@ public class DungeonGenerator : MonoBehaviour
     {
         Vector2Int walkDir = RandomDirection();
         int walkLength = Random.Range(9, 10);
-        myPos += RandomDirection();
+        if (myPos != Vector2Int.zero) { myPos += RandomDirection(); }
         for (int i = 0; i < walkLength; i++)
         {
             if (!InFloorList(myPos + walkDir))
@@ -172,7 +172,7 @@ public class DungeonGenerator : MonoBehaviour
     }
     Vector2Int RandomDirection()
     {
-        switch (Random.Range(1, 5))
+        switch (Random.Range(1, 4))
         {
             case 1:
                 return Vector2Int.up;
@@ -186,7 +186,7 @@ public class DungeonGenerator : MonoBehaviour
             case 4:
                 return Vector2Int.left;
         }
-        return Vector2Int.zero;
+        return Vector2Int.up;
     }
     IEnumerator DelayProgress()
     {
@@ -256,4 +256,5 @@ public class DungeonGenerator : MonoBehaviour
         Debug.Log("no tile found");
         return false;
     }
+
 }

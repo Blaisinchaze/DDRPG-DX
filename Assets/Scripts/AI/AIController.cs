@@ -35,6 +35,28 @@ public class AIController : MonoBehaviour
         }
     }
 
+    public void CheckAIAttack(Vector2Int _targetAttack, int _damage)
+    {
+        EnemyAI temp = null;
+        foreach (var enemy in enemies)
+        {
+            if(enemy.currentTile == _targetAttack)
+            {
+                if (enemy.TakeDamage(_damage))
+                {
+                    
+                    temp = enemy;
+                }
+            }
+        }
+        if(enemies != null)
+        {
+
+            enemies.Remove(temp);
+        }
+
+    }
+
 }
 
 public class Node : IComparable<Node>
