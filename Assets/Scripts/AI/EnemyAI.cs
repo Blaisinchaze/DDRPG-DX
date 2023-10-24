@@ -95,11 +95,7 @@ public class EnemyAI : MonoBehaviour
     {
         if (path.Count == 1)
         {
-            playerController.health -= damage;
-            if(playerController.health <= 0)
-            {
-                playerController.Die();
-            }
+            playerController.TakeDamage(damage);
         }
         else if (path.Count > 1)
         {

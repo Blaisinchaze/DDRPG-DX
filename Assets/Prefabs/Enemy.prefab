@@ -121,7 +121,7 @@ MonoBehaviour:
   rotationSpeed: 10
   path: []
   health: 10
-  damage: 2
+  damage: 1
   ps:
   - {fileID: 2499477470734515882, guid: d66e983c5f217fd46bf513ab393bf4ec, type: 3}
   - {fileID: 3663498033945607694, guid: 06748483f0a887848a846cdb6af2d350, type: 3}

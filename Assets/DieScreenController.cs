@@ -14,12 +14,12 @@ public class DieScreenController : MonoBehaviour
     Color _bgAlpha;
     Color _textAlpha;
 
-    float timer = 1f;
+    float timer = 1.4f;
     // Start is called before the first frame update
     void Start()
     {
         _bgAlpha = blackground.color;
-        _bgAlpha.a = 0.75f;
+        _bgAlpha.a = 0.85f;
 
         _textAlpha = text.color;
         _textAlpha.a = 1f;
@@ -28,7 +28,7 @@ public class DieScreenController : MonoBehaviour
     // Update is called once per frame
     void Update()
     { 
-        blackground.color = Vector4.MoveTowards(blackground.color, _bgAlpha, Time.deltaTime);
+        blackground.color = Vector4.MoveTowards(blackground.color, _bgAlpha, Time.deltaTime * 0.8f);
         if (timer > 0)
         {
             timer -= Time.deltaTime;

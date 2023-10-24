@@ -5,6 +5,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -23,12 +24,15 @@ public class PlayerController : MonoBehaviour
     public int health = 10;
 
     public GameObject dieUI;
+    public Slider healthBar;
     // Start is called before the first frame update
     void Start()
     {
         dungeon = Object.FindObjectOfType<DungeonGenerator>();
         aiController = Object.FindObjectOfType<AIController>();
         targetDirection = Quaternion.identity;
+        healthBar.maxValue = health;
+        healthBar.value = health;
     }
     // Update is called once per frame
     void Update()
@@ -48,6 +52,16 @@ public class PlayerController : MonoBehaviour
     {
         currentTile = Vector2Int.zero;
         directionFacing = Vector2Int.up;
+    }
+
+    public void TakeDamage(int _damage)
+    {
+        health -= _damage;
+        healthBar.value = health;
+        if(health <= 0)
+        {
+            Die();
+        }
     }
 
     public void Die()
