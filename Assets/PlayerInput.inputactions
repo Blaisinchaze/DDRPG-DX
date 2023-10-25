@@ -104,6 +104,39 @@
                     "isPartOfComposite": true
                 },
                 {
+                    "name": "DDRMat",
+                    "id": "3ebf393c-6967-4d15-a943-070b049cb82b",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Turn",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "c3977f10-0918-4b65-94d5-a7894b907cd4",
+                    "path": "<Gamepad>/dpad/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Turn",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "24618ff5-1374-4056-8b8b-a709c92684f3",
+                    "path": "<Gamepad>/dpad/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Turn",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
                     "name": "Keyboard",
                     "id": "505fee84-1aba-40a4-9a6e-3c2680f0e636",
                     "path": "1DAxis",

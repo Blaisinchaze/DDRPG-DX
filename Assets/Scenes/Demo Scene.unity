@@ -851,6 +851,67 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blackground: {fileID: 1319881317}
   text: {fileID: 1704648082}
+--- !u!1 &720290968
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 720290970}
+  - component: {fileID: 720290969}
+  - component: {fileID: 720290971}
+  m_Layer: 0
+  m_Name: BPM Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &720290969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 720290968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23488078de5c46d4d914fffcb5b4ecb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BPM: 60
+  BPS: 0
+  timerCount: 0
+  currentBeat: 0
+--- !u!4 &720290970
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 720290968}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &720290971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 720290968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d8476033a80064ca504fcf82d6c9e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &773126435
 GameObject:
   m_ObjectHideFlags: 0
@@ -1542,8 +1603,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: YOU DIED
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 6dd0acbcb42aedf49836a80b034736cc, type: 2}
-  m_sharedMaterial: {fileID: -2586254757437349060, guid: 6dd0acbcb42aedf49836a80b034736cc,
+  m_fontAsset: {fileID: 11400000, guid: ed43be56ef6f7784fb060e832b9590d6, type: 2}
+  m_sharedMaterial: {fileID: 792384306155497344, guid: ed43be56ef6f7784fb060e832b9590d6,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}

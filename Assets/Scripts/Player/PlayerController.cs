@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Utilities;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -20,6 +22,7 @@ public class PlayerController : MonoBehaviour
 
     DungeonGenerator dungeon;
     AIController aiController;
+    BPMController bpmController;
 
     public int health = 10;
 
@@ -28,8 +31,9 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        dungeon = Object.FindObjectOfType<DungeonGenerator>();
-        aiController = Object.FindObjectOfType<AIController>();
+        dungeon = UnityEngine.Object.FindObjectOfType<DungeonGenerator>();
+        aiController = UnityEngine.Object.FindObjectOfType<AIController>();
+        bpmController = UnityEngine.Object.FindObjectOfType<BPMController>();
         targetDirection = Quaternion.identity;
         healthBar.maxValue = health;
         healthBar.value = health;
@@ -37,7 +41,24 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(transform.rotation != targetDirection)
+
+        DDRPadInputCheck();
+        foreach (KeyCode kcode in Enum.GetValues(typeof(KeyCode)))
+        {
+            if (Input.GetKeyDown(kcode))
+                Debug.Log("KeyCode down: " + kcode);
+        }
+        if (Input.anyKeyDown)
+        {
+
+            foreach (var item in InputSystem.devices)
+            {
+                Debug.Log(item.displayName);
+            }
+            //Debug.Log(InputSystem.devices[1].); 
+
+        }
+        if (transform.rotation != targetDirection)
         {
             transform.rotation = Quaternion.Lerp(transform.rotation, targetDirection, Time.deltaTime * rotationSpeed);
         }
@@ -45,6 +66,69 @@ public class PlayerController : MonoBehaviour
         if(transform.position != targetLocation)
         {
             transform.position = Vector3.Lerp(transform.position, targetLocation, Time.deltaTime * movementSpeed);
+        }
+    }
+
+    private void DDRPadInputCheck()
+    {
+        //Left Pad Left Arrow
+        if (Input.GetKeyDown(KeyCode.Joystick1Button0))
+        {
+            OnTurn(-1);
+        }
+        //Left Pad Right Arrow
+        if (Input.GetKeyDown(KeyCode.Joystick1Button1))
+        {
+            OnTurn(1);
+        }
+        //Left Pad Up Arrow
+        if (Input.GetKeyDown(KeyCode.Joystick1Button2))
+        {
+            OnMove(1);
+        }
+
+        //Left Pad Back Arrow
+        if (Input.GetKeyDown(KeyCode.Joystick1Button3))
+        {
+            OnMove(-1);
+        }
+        //Left Pad Start Button
+        if (Input.GetKeyDown(KeyCode.Joystick1Button4))
+        {
+        }
+        //Left Pad Select Button
+        if (Input.GetKeyDown(KeyCode.Joystick1Button5))
+        {
+        }
+
+        //Right Pad Left Arrow
+        if (Input.GetKeyDown(KeyCode.Joystick1Button6))
+        {
+            OnAttack(-1);
+        }
+        //Right Pad Right Arrow
+        if (Input.GetKeyDown(KeyCode.Joystick1Button7))
+        {
+            OnAttack(1);
+        }
+        //Right Pad Up Arrow
+        if (Input.GetKeyDown(KeyCode.Joystick1Button8))
+        {
+            //Interact Code
+        }
+
+        //Right Pad Back Arrow
+        if (Input.GetKeyDown(KeyCode.Joystick1Button9))
+        {
+            OnWait();
+        }
+        //Right Pad Start Button
+        if (Input.GetKeyDown(KeyCode.Joystick1Button10))
+        {
+        }
+        //Right Pad Select Button
+        if (Input.GetKeyDown(KeyCode.Joystick1Button11))
+        {
         }
     }
 
@@ -81,20 +165,8 @@ public class PlayerController : MonoBehaviour
         Debug.Log("move pressed");
         int movementVector = (int)_movementValue.Get<float>();        
         if (movementVector == 0) return;
-        Vector2Int _targetTile = currentTile + (directionFacing * movementVector);
-        Debug.Log(_targetTile);
-        if (dungeon.IsTileTraversable(_targetTile))
-        {
-            Debug.Log("Move");
-            currentTile = _targetTile;
-            targetLocation = new Vector3(_targetTile.x, 0, _targetTile.y);
-            if(currentTile == dungeon.floorList.ElementAt(dungeon.floorList.Count - 1).Value.Location)
-            {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            }
 
-            aiController.UpdateAI(currentTile);
-        }
+        OnMove(movementVector);
     }
 
     void OnTurn(InputValue _turnValue)
@@ -102,12 +174,7 @@ public class PlayerController : MonoBehaviour
         int movementVector = (int)_turnValue.Get<float>();
         if (movementVector == 0) return;
 
-        Quaternion rot = Quaternion.Euler(0, 0, movementVector > 0 ? -90 : 90);
-        Vector2 _tempVector = directionFacing;
-        _tempVector = rot * _tempVector;
-        directionFacing = Vector2Int.RoundToInt(_tempVector);
-        rot = Quaternion.Euler(0, movementVector > 0 ? 90 : -90,0 );
-        targetDirection = targetDirection * rot;
+        OnTurn(movementVector);
     }
 
     void OnAttack(InputValue _attackValue)
@@ -116,10 +183,7 @@ public class PlayerController : MonoBehaviour
         int attackVector = (int)_attackValue.Get<float>();
         if (attackVector == 0) return;
 
-
-        Debug.Log("Attack");
-        aiController.CheckAIAttack(currentTile + directionFacing, 5);
-        aiController.UpdateAI(currentTile);
+        OnAttack(attackVector);
 
     }
 
@@ -132,5 +196,44 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void OnTurn(int _turnValue)
+    {
+        Quaternion rot = Quaternion.Euler(0, 0, _turnValue > 0 ? -90 : 90);
+        Vector2 _tempVector = directionFacing;
+        _tempVector = rot * _tempVector;
+        directionFacing = Vector2Int.RoundToInt(_tempVector);
+        rot = Quaternion.Euler(0, _turnValue > 0 ? 90 : -90, 0);
+        targetDirection = targetDirection * rot;
+    }
 
+    public void OnMove(int _moveValue)
+    {
+        Vector2Int _targetTile = currentTile + (directionFacing * _moveValue);
+        Debug.Log(_targetTile);
+        if (dungeon.IsTileTraversable(_targetTile))
+        {
+            Debug.Log("Move");
+            currentTile = _targetTile;
+            targetLocation = new Vector3(_targetTile.x, 0, _targetTile.y);
+            if (currentTile == dungeon.floorList.ElementAt(dungeon.floorList.Count - 1).Value.Location)
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            }
+
+            aiController.UpdateAI(currentTile);
+        }
+    }
+
+    public void OnAttack(int _attackValue)
+    {
+        Debug.Log("Attack");
+        aiController.CheckAIAttack(currentTile + directionFacing, 5);
+        aiController.UpdateAI(currentTile);
+    }
+
+    public void OnWait()
+    {
+        Debug.Log("Wait");
+        aiController.UpdateAI(currentTile);
+    }
 }
